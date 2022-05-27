@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <!--启用spring的一些annotation -->
+    <context:component-scan base-package="com.weixiao.Service"/>
+
+
+    <!--引入数据库配置文件-->
+    <context:property-placeholder location="classpath:db.properties"/>
+    <!--配置数据源-->
+    <!--  这里用的是dbcp连接池，也可以换成druid、c3p0  -->
+    <bean id="dataSource1" class="org.apache.commons.dbcp.BasicDataSource">
+        <property name="driverClassName" value="${db.driver}" />
+        <property name="url" value="${db.url}"/>
+        <property name="username" value="${db.username}"/>
+        <property name="password" value="${db.password}"/>
+        <property name="maxActive"  value="10"/>
+        <property name="maxIdle" value="5"/>
+    </bean>
+
+    <!--配置sqlSessionFactory-->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--指定Mybatis项目指定的配置文件-->
+        <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <!--指定数据源-->
+        <property name="dataSource" ref="dataSource1"/>
+    </bean>
+
+    <!--  配置mapper扫描,动态实现了mapper接口可以注册到spring容器中  -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+        <!--  要扫描的mapper  -->
+        <property name="basePackage" value="com.weixiao.dao"/>
+    </bean>
+
+
+
+
+
+    <!--jdbc配置-->
+    <bean id="biageDao" class="com.weixiao.JdbcTemplateTest"/>
+    <bean id="biageService" class="com.weixiao.JdbcTemplateTest"/>
+
+
+    <!--系统默认配置的连接池-->
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="username" value="root"></property>
+        <property name="password" value="adbrk"></property>
+        <property name="url" value="jdbc:mysql://localhost:3306/fc"></property>
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+    </bean>
+
+    <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+
+
+</beans>
+

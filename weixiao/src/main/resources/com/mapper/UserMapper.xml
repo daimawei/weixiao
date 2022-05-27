@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.weixiao.dao.UserMapper">
+    <!--扫描数据库中的表-->
+<!--resultMap元素用来描述如何将结果集映射到 Java 对象-->
+    <resultMap id="userResult" type="com.weixiao.User">
+        <id property="id" column="id" jdbcType="INTEGER"/>
+<!-- property 属性则表示查询出来的字段对应的值赋给实体对象的哪个属性。
+     column 属性表示从数据库中查询的字段名或别名-->
+        <result property="name" column="name"/>
+        <result property="type" column="type"/>
+        <result property="school" column="school"/>
+    </resultMap>
+
+    <!--数据中表的属性-->
+    <insert id="addUser" parameterType="com.weixiao.User">
+        insert into user(name, type, school) value (#{name}, #{type}, #{school})
+    </insert>
+
+    <delete id="delUserById" parameterType="integer">
+        delete from user where id=#{id}
+    </delete>
+
+    <select id="findAllUser" resultMap="userResult">
+        select * from user;
+    </select>
+
+</mapper>
+
+
